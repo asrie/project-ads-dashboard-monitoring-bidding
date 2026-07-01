@@ -1,0 +1,59 @@
+# ------------------------------------------------------------------
+# Normalisasi line ending: simpan sebagai LF di repo & checkout LF di
+# semua OS. Ini mengalahkan core.autocrlf, jadi warning
+# "LF will be replaced by CRLF" hilang.
+# ------------------------------------------------------------------
+
+# Default: auto-deteksi teks, paksa LF untuk file teks.
+* text=auto eol=lf
+
+# --- File teks (eksplisit, LF) ---
+*.php    text eol=lf
+*.js     text eol=lf
+*.mjs    text eol=lf
+*.cjs    text eol=lf
+*.ts     text eol=lf
+*.svelte text eol=lf
+*.css    text eol=lf
+*.scss   text eol=lf
+*.html   text eol=lf
+*.json   text eol=lf
+*.md     text eol=lf
+*.yml    text eol=lf
+*.yaml   text eol=lf
+*.sql    text eol=lf
+*.sh     text eol=lf
+*.xml    text eol=lf
+*.svg    text eol=lf
+*.env    text eol=lf
+.env.*   text eol=lf
+Dockerfile      text eol=lf
+*.dockerignore  text eol=lf
+.gitignore      text eol=lf
+.gitattributes  text eol=lf
+
+# --- Script khusus Windows: pertahankan CRLF ---
+*.bat    text eol=crlf
+*.cmd    text eol=crlf
+*.ps1    text eol=crlf
+
+# --- File biner: jangan pernah diubah/di-diff ---
+*.png    binary
+*.jpg    binary
+*.jpeg   binary
+*.gif    binary
+*.ico    binary
+*.webp   binary
+*.woff   binary
+*.woff2  binary
+*.ttf    binary
+*.eot    binary
+*.otf    binary
+*.pdf    binary
+*.zip    binary
+*.gz     binary
+*.phar   binary
+
+# --- Lockfile: teks LF tapi sembunyikan dari diff (mengurangi noise) ---
+package-lock.json text eol=lf -diff
+composer.lock     text eol=lf -diff
