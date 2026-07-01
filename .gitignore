@@ -1,0 +1,54 @@
+# ------------------------------------------------------------------
+# Root .gitignore (monorepo: backend Laravel + frontend Svelte + renderer)
+# Belt-and-suspenders di atas .gitignore per-subfolder.
+# ------------------------------------------------------------------
+
+# Dependencies
+vendor/
+node_modules/
+/backend/vendor/
+/frontend/node_modules/
+/renderer/node_modules/
+
+# Environment / secrets  (JANGAN pernah commit)
+.env
+.env.*
+!.env.example
+*.key
+auth.json
+
+# Laravel storage & bootstrap cache
+/backend/storage/*.key
+/backend/storage/logs/*
+/backend/storage/framework/cache/*
+/backend/storage/framework/sessions/*
+/backend/storage/framework/testing/*
+/backend/storage/framework/views/*
+/backend/bootstrap/cache/*
+
+# Build output
+/frontend/dist/
+/frontend/dist-ssr/
+/backend/public/build/
+/backend/public/hot
+/backend/public/storage
+
+# Renderer artefak (screenshot/preview)
+/renderer/output/
+/renderer/screenshots/
+/renderer/tmp/
+
+# Logs
+*.log
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Claude Code local settings (settings.json boleh di-share, yang *.local jangan)
+.claude/settings.local.json
+.claude/*.local.json

@@ -1,0 +1,15 @@
+{
+  "name": "ads-dashboard-renderer",
+  "private": true,
+  "version": "0.1.0",
+  "type": "commonjs",
+  "description": "Headless Playwright renderer: screenshot + ad-slot geometry (GPT/Prebid) for the dashboard ad-layout preview.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.21.2",
+    "playwright": "1.49.1"
+  }
+}
