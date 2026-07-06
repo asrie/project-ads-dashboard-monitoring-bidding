@@ -1,0 +1,76 @@
+name: CI
+
+on:
+  push:
+    branches: [main, staging]
+  pull_request:
+
+# Batalkan run lama pada ref yang sama saat ada push baru.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  backend:
+    name: Backend (Laravel)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup PHP 8.3
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          extensions: mbstring, dom, xml, ctype, tokenizer, bcmath, curl, openssl, pdo, pdo_sqlite, sqlite3, fileinfo
+          coverage: none
+          tools: composer:v2
+
+      - name: Cache Composer vendor
+        uses: actions/cache@v4
+        with:
+          path: backend/vendor
+          key: composer-${{ runner.os }}-${{ hashFiles('backend/composer.lock') }}
+          restore-keys: composer-${{ runner.os }}-
+
+      - name: Copy .env
+        run: cp .env.example .env
+
+      - name: Install dependencies
+        run: composer install --prefer-dist --no-progress --no-interaction
+
+      - name: Generate app & JWT keys
+        run: |
+          php artisan key:generate
+          php artisan jwt:secret --force
+
+      - name: Lint (Pint)
+        run: vendor/bin/pint --test
+
+      - name: Run tests (PHPUnit, SQLite :memory:)
+        run: php artisan test
+
+  frontend:
+    name: Frontend (Svelte)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      # `npm run build` menjalankan svelte-check (type-check) lalu vite build.
+      - name: Type-check & build
+        run: npm run build

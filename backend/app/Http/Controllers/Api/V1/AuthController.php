@@ -7,9 +7,10 @@ namespace App\Http\Controllers\Api\V1;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\LoginRequest;
 use App\Http\Resources\UserResource;
+use App\Models\User;
 use App\Services\Auth\AuthService;
-use Illuminate\Http\JsonResponse;
 use App\Support\ApiResponse;
+use Illuminate\Http\JsonResponse;
 
 class AuthController extends Controller
 {
@@ -47,7 +48,7 @@ class AuthController extends Controller
     }
 
     /**
-     * @param  array{access_token: string, token_type: string, expires_in: int, user: \App\Models\User}  $payload
+     * @param  array{access_token: string, token_type: string, expires_in: int, user: User}  $payload
      */
     private function tokenResponse(array $payload): array
     {

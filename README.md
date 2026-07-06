@@ -8,6 +8,7 @@ koneksi Google Ad Manager (GAM), network request script ads, sampai **Web Core V
 Tujuannya: **mendeteksi masalah lebih cepat, mengoptimalkan revenue programmatic, dan
 menjaga user experience website tetap baik.**
 
+[![CI](https://github.com/asrie/project-ads-dashboard-monitoring-bidding/actions/workflows/ci.yml/badge.svg)](https://github.com/asrie/project-ads-dashboard-monitoring-bidding/actions/workflows/ci.yml)
 ![Laravel](https://img.shields.io/badge/Laravel-13-FF2D20?logo=laravel&logoColor=white)
 ![PHP](https://img.shields.io/badge/PHP-8.3-777BB4?logo=php&logoColor=white)
 ![Svelte](https://img.shields.io/badge/Svelte-5-FF3E00?logo=svelte&logoColor=white)
@@ -314,6 +315,7 @@ tidak di-log; tanpa raw SQL tanpa binding; `APP_DEBUG=false` di production.
 
 | Dokumen | Isi |
 |---|---|
+| [CONTRIBUTING.md](CONTRIBUTING.md) | Alur kerja Git, standar kode, testing, CI, security |
 | [CLAUDE.md](CLAUDE.md) | Panduan arsitektur, konvensi backend/frontend, design system, metric & alert rules |
 | [DATABASE.md](DATABASE.md) | ERD (Mermaid) + kamus data lengkap |
 | [Database.sql](Database.sql) | DDL PostgreSQL kanonik |

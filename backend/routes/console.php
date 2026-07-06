@@ -12,4 +12,3 @@ Artisan::command('inspire', function () {
 Schedule::command('monitor:uptime')->everyFiveMinutes()->withoutOverlapping();
 Schedule::command('webvitals:fetch')->dailyAt('03:00'); // CrUX updates daily
 Schedule::command('gam:sync')->dailyAt('04:00')->withoutOverlapping(); // GAM report (skips if unconfigured)
-

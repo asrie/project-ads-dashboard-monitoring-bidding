@@ -36,7 +36,7 @@ return Application::configure(basePath: dirname(__DIR__))
         );
 
         // Standardize all API error responses to the documented envelope.
-        $exceptions->render(function (\Throwable $e, Request $request) {
+        $exceptions->render(function (Throwable $e, Request $request) {
             if (! $request->is('api/*')) {
                 return null;
             }

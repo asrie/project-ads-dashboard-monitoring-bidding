@@ -7,6 +7,7 @@ namespace App\Services\ServerHealth;
 use App\Models\ServerCheck;
 use App\Support\DashboardFilters;
 use App\Support\Metrics;
+use Carbon\CarbonImmutable;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
 
@@ -117,7 +118,7 @@ class ServerHealthService
                 'avg_response_ms' => round((float) $r->avg_resp, 1),
                 'current_status' => $current->status ?? 'unknown',
                 'last_checked_at' => isset($current->checked_at)
-                    ? \Carbon\CarbonImmutable::parse($current->checked_at)->toIso8601String()
+                    ? CarbonImmutable::parse($current->checked_at)->toIso8601String()
                     : null,
                 'status' => $this->statusFromUptime($uptime),
             ];

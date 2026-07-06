@@ -9,7 +9,9 @@ use App\Models\Domain;
 use App\Models\SlotPerformanceDaily;
 use Carbon\CarbonInterface;
 use Google\AdsApi\AdManager\AdManagerServices;
+use Google\AdsApi\AdManager\AdManagerSession;
 use Google\AdsApi\AdManager\AdManagerSessionBuilder;
+use Google\AdsApi\AdManager\Util\v202605\ReportDownloader;
 use Google\AdsApi\AdManager\v202605\Column;
 use Google\AdsApi\AdManager\v202605\Date as GamDate;
 use Google\AdsApi\AdManager\v202605\DateRangeType;
@@ -19,7 +21,6 @@ use Google\AdsApi\AdManager\v202605\ReportJob;
 use Google\AdsApi\AdManager\v202605\ReportQuery;
 use Google\AdsApi\AdManager\v202605\ReportQueryAdUnitView;
 use Google\AdsApi\AdManager\v202605\ReportService;
-use Google\AdsApi\AdManager\Util\v202605\ReportDownloader;
 use Google\AdsApi\Common\OAuth2TokenBuilder;
 use RuntimeException;
 
@@ -63,14 +64,14 @@ class GamReportService
         return $this->ingestCsv($csv, $domainId, $autoCreate);
     }
 
-    private function session(): \Google\AdsApi\AdManager\AdManagerSession
+    private function session(): AdManagerSession
     {
-        $credential = (new OAuth2TokenBuilder())
+        $credential = (new OAuth2TokenBuilder)
             ->withJsonKeyFilePath($this->resolveKeyFilePath())
             ->withScopes([self::SCOPE])
             ->build();
 
-        return (new AdManagerSessionBuilder())
+        return (new AdManagerSessionBuilder)
             ->withApplicationName((string) config('services.gam.application_name', 'Ads Dashboard'))
             ->withNetworkCode((string) config('services.gam.network_code'))
             ->withOAuth2Credential($credential)
@@ -80,11 +81,11 @@ class GamReportService
     private function runReport(CarbonInterface $from, CarbonInterface $to): string
     {
         $session = $this->session();
-        $services = new AdManagerServices();
+        $services = new AdManagerServices;
         /** @var ReportService $reportService */
         $reportService = $services->get($session, ReportService::class);
 
-        $query = new ReportQuery();
+        $query = new ReportQuery;
         $query->setDimensions([
             Dimension::DATE,
             Dimension::AD_UNIT_NAME,
@@ -102,7 +103,7 @@ class GamReportService
         $query->setStartDate($this->gamDate($from));
         $query->setEndDate($this->gamDate($to));
 
-        $job = new ReportJob();
+        $job = new ReportJob;
         $job->setReportQuery($query);
         $job = $reportService->runReportJob($job);
 
@@ -365,7 +366,7 @@ class GamReportService
 
     private function gamDate(CarbonInterface $date): GamDate
     {
-        $d = new GamDate();
+        $d = new GamDate;
         $d->setYear((int) $date->year);
         $d->setMonth((int) $date->month);
         $d->setDay((int) $date->day);
