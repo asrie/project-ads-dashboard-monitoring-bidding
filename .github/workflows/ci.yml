@@ -4,11 +4,15 @@ on:
   push:
     branches: [main, staging]
   pull_request:
+  workflow_dispatch:
 
 # Batalkan run lama pada ref yang sama saat ada push baru.
 concurrency:
   group: ci-${{ github.ref }}
   cancel-in-progress: true
+
+permissions:
+  contents: read
 
 jobs:
   backend:
@@ -27,6 +31,9 @@ jobs:
           extensions: mbstring, dom, xml, ctype, tokenizer, bcmath, curl, openssl, pdo, pdo_sqlite, sqlite3, fileinfo
           coverage: none
           tools: composer:v2
+
+      - name: Validate composer.json / composer.lock
+        run: composer validate --strict
 
       - name: Cache Composer vendor
         uses: actions/cache@v4
@@ -52,6 +59,12 @@ jobs:
       - name: Run tests (PHPUnit, SQLite :memory:)
         run: php artisan test
 
+      # Informatif: advisory baru tidak mem-block merge.
+      # Hapus `continue-on-error` untuk menjadikannya gate.
+      - name: Dependency audit
+        run: composer audit --no-interaction
+        continue-on-error: true
+
   frontend:
     name: Frontend (Svelte)
     runs-on: ubuntu-latest
@@ -74,3 +87,35 @@ jobs:
       # `npm run build` menjalankan svelte-check (type-check) lalu vite build.
       - name: Type-check & build
         run: npm run build
+
+      - name: Dependency audit
+        run: npm audit --audit-level=high
+        continue-on-error: true
+
+      # Placeholder sesuai TESTING.md bagian 11-15. Aktifkan setelah tooling
+      # dipasang (belum ada di package.json):
+      #   npm i -D eslint prettier vitest @testing-library/svelte jsdom @playwright/test
+      # lalu tambahkan script "lint"/"test"/"test:e2e" dan un-comment:
+      # - name: Lint
+      #   run: npm run lint
+      # - name: Unit / component test (Vitest)
+      #   run: npm run test
+      # - name: E2E test (Playwright)
+      #   run: |
+      #     npx playwright install --with-deps chromium
+      #     npm run test:e2e
+
+  # ---------------------------------------------------------------------------
+  # Pastikan semua image tetap bisa di-build (TESTING.md bagian 19).
+  # ---------------------------------------------------------------------------
+  docker:
+    name: Docker build sanity
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build all compose images
+        run: docker compose build
